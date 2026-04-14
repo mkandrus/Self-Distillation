@@ -28,8 +28,6 @@ import os
 import sys
 from pathlib import Path
 
-os.environ.setdefault("HF_HOME", "/workspace/.cache/huggingface")
-
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
