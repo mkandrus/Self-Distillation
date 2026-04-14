@@ -1,0 +1,21 @@
+# Mac-compatible requirements for Self-Distillation
+# Removed: vllm, deepspeed, flashinfer-python (not compatible with macOS)
+
+datasets==4.3.0
+# PyTorch with MPS support for Apple Silicon
+torch>=2.0.0
+transformers==5.5.4
+accelerate==1.11.0
+peft==0.18.1
+rich==14.2.0
+trl==0.24.0
+tqdm==4.67.1
+numpy==2.2.6
+scipy==1.15.3
+matplotlib==3.10.7
+wandb==0.22.2
+pandas==2.3.3
+# sentencepiece is needed for some models like Llama
+sentencepiece
+protobuf
+anthropic==0.71.0

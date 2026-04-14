@@ -49,9 +49,6 @@ import os
 import sys
 from pathlib import Path
 
-# Ensure model weights are loaded from persistent storage, not re-downloaded
-os.environ.setdefault("HF_HOME", "/workspace/.cache/huggingface")
-
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -63,7 +60,9 @@ def parse_args():
     parser.add_argument("--mode", type=str, default="interactive", choices=["interactive", "claude"],
                         help="interactive: you type; claude: Claude API drives the conversation")
     # Generation settings
-    parser.add_argument("--max_new_tokens", type=int, default=512)
+    parser.add_argument("--max_new_tokens", type=int, default=None,
+                        help="Hard cap on tokens generated. Omit to let the model stop naturally at EOS "
+                             "(reliable for instruct models; base models may ramble).")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--top_p", type=float, default=0.9)
     # Claude-mode settings
@@ -100,19 +99,20 @@ def load_local_model(model_name: str, device: str):
     return model, tokenizer
 
 
-def generate_response(model, tokenizer, messages: list, max_new_tokens: int, temperature: float, top_p: float) -> str:
+def generate_response(model, tokenizer, messages: list, max_new_tokens: int | None, temperature: float, top_p: float) -> str:
     """Generate one response from the local model given a message list."""
     text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(text, return_tensors="pt").to(model.device)
+    gen_kwargs = dict(
+        temperature=temperature,
+        top_p=top_p,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+    )
+    if max_new_tokens is not None:
+        gen_kwargs["max_new_tokens"] = max_new_tokens
     with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_new_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            do_sample=True,
-            pad_token_id=tokenizer.eos_token_id,
-        )
+        outputs = model.generate(**inputs, **gen_kwargs)
     # Decode only the new tokens
     new_tokens = outputs[0][inputs["input_ids"].shape[1]:]
     return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
