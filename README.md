@@ -45,6 +45,24 @@ source distillation/bin/activate
 pip install -r requirements.txt
 ```
 
+**Qwen3.5 models** require two additional libraries for the fast path (hybrid Mamba/linear-attention layers). Without them training falls back to a ~12x slower pure-torch implementation.
+
+`flash-linear-attention` is included in requirements.txt and installs automatically.
+
+`causal-conv1d` must be installed manually from a pre-built wheel to avoid pip accidentally upgrading torch. Pick the wheel matching your Python, torch, and CUDA versions from the [releases page](https://github.com/Dao-AILab/causal-conv1d/releases) and install with `--no-deps`:
+
+```bash
+# Example for Python 3.12, torch 2.10, CUDA 12.x, Linux x86_64:
+pip install --no-deps \
+  "https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.6.1.post4/causal_conv1d-1.6.1%2Bcu12torch2.10cxx11abiTRUE-cp312-cp312-linux_x86_64.whl"
+```
+
+Also set `HF_HOME` to a persistent directory so model weights survive instance restarts:
+
+```bash
+export HF_HOME=/workspace/.cache/huggingface
+```
+
 ### 4. Usage
 
 #### Tooluse

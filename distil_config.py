@@ -498,6 +498,10 @@ class DistilConfig(TrainingArguments):
                    "If False (default), use the student model for generation (standard RL behavior)."
         },
     )
+    full_logit_distillation: bool = field(
+        default=False,
+        metadata={"help": "If True, use full logit distillation instead of token-level KL divergence."},
+    )
     num_iterations: int = field(
         default=1,
         metadata={"help": "Number of iterations per batch (denoted as μ in the algorithm)."},

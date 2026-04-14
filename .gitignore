@@ -6,3 +6,13 @@ wandb/
 results/
 bsub_outputs/
 .hyperparameter_search_scripts_main/
+
+# Model checkpoints and training outputs
+test_experiment*/
+*.arrow
+
+# PDF source files (transcripts committed as JSON instead)
+*.pdf
+
+# HuggingFace cache
+.cache/

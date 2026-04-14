@@ -16,8 +16,10 @@ def parse_args():
     parser.add_argument("--ref_model_mixup_alpha", type=float, default=0.01, help="Reference model mixup alpha")
     parser.add_argument("--output_dir", type=str, help="Output directory")
     parser.add_argument("--model_name", type=str, default="Qwen/Qwen2.5-7B-Instruct", help="Model name")
-    parser.add_argument("--dataset_name", type=str, default="tooluse", help="Dataset name", choices=["tooluse", "science"])
+    parser.add_argument("--dataset_name", type=str, default="tooluse", help="Dataset name", choices=["tooluse", "science", "eoe"])
+    parser.add_argument("--dataset_path", type=str, default=None, help="Path to Arrow dataset (required when --dataset_name eoe)")
     parser.add_argument("--seed", type=int, default=42, help="Seed")
+    parser.add_argument("--report_to", type=str, default="none", help="Reporting integration (e.g. wandb, none)")
     return parser.parse_args()
 
 def load_tooluse_dataset(seed=42) -> Dataset:
@@ -44,6 +46,15 @@ Now answer with a response of your own, including the thinking process.
     train_dataset = train_dataset.map(format_example, remove_columns=train_dataset.column_names)
     train_dataset = train_dataset.shuffle(seed=seed)
     return train_dataset, None
+
+
+def load_eoe_dataset(path: str, seed=42):
+    """Load a pre-built EOE Arrow dataset (created by create_eoe_dataset.py)."""
+    print(f"Loading EOE dataset from {path}")
+    dataset = load_from_disk(path)
+    dataset = dataset.shuffle(seed=seed)
+    print(f"Loaded {len(dataset)} EOE examples")
+    return dataset, None
 
 
 def load_science_dataset(seed=42) -> Dataset:
@@ -94,6 +105,10 @@ if __name__ == "__main__":
         dataset, _ = load_tooluse_dataset(args.seed)
     elif args.dataset_name == "science":
         dataset, _ = load_science_dataset(args.seed)
+    elif args.dataset_name == "eoe":
+        if not args.dataset_path:
+            raise ValueError("--dataset_path is required when --dataset_name eoe")
+        dataset, _ = load_eoe_dataset(args.dataset_path, args.seed)
     else:
         raise ValueError(f"Invalid dataset name: {args.dataset_name}")
 
@@ -103,7 +118,7 @@ if __name__ == "__main__":
         vllm_mode="colocate",
         vllm_tensor_parallel_size=1, 
         vllm_gpu_memory_utilization=0.3,
-        vllm_enable_sleep_mode=True, 
+        vllm_enable_sleep_mode=True,
         learning_rate = args.learning_rate,
         warmup_ratio = 0.1,
         lr_scheduler_type = "cosine",
@@ -112,14 +127,16 @@ if __name__ == "__main__":
         fp16 = False,
         per_device_train_batch_size = 1,
         gradient_accumulation_steps = args.num_prompts_per_batch,
-        max_prompt_length = 1024,
-        max_completion_length = 1024,
+        max_prompt_length = 512,
+        max_completion_length = 512,
         num_train_epochs = args.num_train_epochs,
         num_iterations = 1,
         num_generations = 1,
         save_steps = 100,
         max_grad_norm = 1,
-        report_to = "wandb",
+        optim = "adamw_8bit",
+        gradient_checkpointing = True,
+        report_to = args.report_to,
         output_dir = args.output_dir,
         log_completions = False, # True for debugging
         sync_ref_model = True,

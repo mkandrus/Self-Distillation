@@ -48,11 +48,11 @@ from transformers.utils import is_datasets_available, is_flash_attn_2_available,
 
 from trl.data_utils import apply_chat_template, is_conversational, maybe_apply_chat_template, prepare_multimodal_messages
 from trl.extras.profiling import profiling_context, profiling_decorator
-from trl.extras.vllm_client import VLLMClient
+from trl.generation.vllm_client import VLLMClient
 from trl.import_utils import is_liger_kernel_available, is_vllm_available
-from trl.models import prepare_deepspeed, prepare_fsdp, prepare_peft_model, unwrap_model_for_generation
+from trl.models import prepare_deepspeed, prepare_fsdp, unwrap_model_for_generation
 from trl.models.utils import _ForwardRedirection
-from trl.trainer.base_trainer import BaseTrainer
+from trl.trainer.base_trainer import _BaseTrainer as BaseTrainer
 from distil_config import DistilConfig
 from accelerate.state import AcceleratorState
 from trl.trainer.utils import (
@@ -76,7 +76,82 @@ from torch.nn.functional import log_softmax, kl_div
 
 
 if is_peft_available():
-    from peft import PeftConfig, PeftModel
+    import peft
+    from packaging import version
+    from peft import PeftConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
+
+
+def _enable_gradient_checkpointing(model, gradient_checkpointing_kwargs):
+    """Enable gradient checkpointing, handling PEFT models correctly."""
+    if is_peft_available() and is_peft_model(model):
+        model.base_model.gradient_checkpointing_enable()
+    else:
+        model.gradient_checkpointing_enable()
+    gradient_checkpointing_kwargs = gradient_checkpointing_kwargs or {}
+    use_reentrant = (
+        "use_reentrant" not in gradient_checkpointing_kwargs or gradient_checkpointing_kwargs["use_reentrant"]
+    )
+    if use_reentrant:
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
+        else:
+            def make_inputs_require_grad(module, input, output):
+                output.requires_grad_(True)
+            model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+    return model
+
+
+def prepare_peft_model(model, peft_config, args):
+    """Prepares a model for PEFT training.
+
+    Copied from trl 0.24.0 (trl.models.utils) for compatibility with trl>=1.0,
+    which removed this function from its public API.
+    """
+    if not is_peft_available():
+        raise ImportError("PEFT is required to use a peft model. Run `pip install peft`.")
+
+    # If the model is already a PeftModel, merge and unload before re-wrapping.
+    if isinstance(model, PeftModel) and peft_config is not None:
+        model = model.merge_and_unload()
+
+    is_qlora = getattr(model, "is_loaded_in_4bit", False) or getattr(model, "is_loaded_in_8bit", False)
+
+    is_sharded_qlora = False
+    if getattr(model, "is_loaded_in_4bit", False):
+        for _, param in model.named_parameters():
+            if param.__class__.__name__ == "Params4bit":
+                is_sharded_qlora = param.data.device.type in {"cpu", "meta"}
+                break
+
+    if is_qlora and not is_sharded_qlora and not isinstance(model, PeftModel):
+        model = prepare_model_for_kbit_training(
+            model,
+            use_gradient_checkpointing=args.gradient_checkpointing,
+            gradient_checkpointing_kwargs=args.gradient_checkpointing_kwargs or {},
+        )
+        args.gradient_checkpointing = False
+    elif args.gradient_checkpointing:
+        model = _enable_gradient_checkpointing(model, args.gradient_checkpointing_kwargs)
+
+    if peft_config is not None:
+        if (
+            version.parse(peft.__version__) >= version.parse("0.12")
+            and getattr(model, "is_loaded_in_4bit", False)
+            and is_sharded_qlora
+        ):
+            model = get_peft_model(model, peft_config, autocast_adapter_dtype=False)
+        else:
+            model = get_peft_model(model, peft_config)
+
+    if args.bf16 and getattr(model, "is_loaded_in_4bit", False) and not is_sharded_qlora:
+        for name, module in model.named_modules():
+            if isinstance(module, torch.nn.LayerNorm) or "norm" in name:
+                module.to(torch.float32)
+            elif any(x in name for x in ["lm_head", "embed_tokens", "wte", "wpe"]):
+                if hasattr(module, "weight") and module.weight.dtype == torch.float32:
+                    module.to(torch.bfloat16)
+
+    return model
 
 if is_vllm_available():
     from vllm import LLM, SamplingParams
@@ -377,7 +452,8 @@ class DistilTrainer(BaseTrainer):
         # "Could not estimate the number of tokens of the input, floating-point operations will not be computed." To
         # suppress this warning, we set the "estimate_tokens" key in the model's "warnings_issued" dictionary to True.
         # This acts as a flag to indicate that the warning has already been issued.
-        model.warnings_issued["estimate_tokens"] = True
+        if hasattr(model, "warnings_issued"):
+            model.warnings_issued["estimate_tokens"] = True
 
         super().__init__(
             model=model,
@@ -399,6 +475,7 @@ class DistilTrainer(BaseTrainer):
         # Reference model
         self.beta = args.beta
         self.alpha = args.alpha
+        self.full_logit_distillation = args.full_logit_distillation
         self.generate_from_teacher = args.generate_from_teacher
         if ref_model is not None:
             # If a reference model is provided, use it
@@ -931,8 +1008,19 @@ class DistilTrainer(BaseTrainer):
                 elif fsdp_version == 2:
                     self._sync_fsdp2_params_to_vllm(model_to_sync)
             else:
+                # Detect once if vLLM wraps the LM under a language_model attribute (e.g. Qwen3.5 VLM).
+                # In that case, AutoModelForCausalLM gives names like "model.*" but vLLM's
+                # hf_to_vllm_mapper expects "model.language_model.*", so we add the infix.
+                if self.vllm_mode == "colocate":
+                    _llm_model = self.llm.llm_engine.model_executor.driver_worker.model_runner.model
+                    _needs_language_model_prefix = hasattr(_llm_model, "language_model")
+                else:
+                    _needs_language_model_prefix = False
+
                 for name, param in model_to_sync.named_parameters():
                     name = self._fix_param_name_to_vllm(name)
+                    if _needs_language_model_prefix and name.startswith("model.") and not name.startswith("model.language_model."):
+                        name = "model.language_model." + name[len("model."):]
                     with gather_if_zero3([param]):
                         if self.vllm_mode == "server" and self.accelerator.is_main_process:
                             self.vllm_client.update_named_param(name, param.data)
@@ -1139,7 +1227,6 @@ class DistilTrainer(BaseTrainer):
                     "top_k": -1 if self.top_k is None else self.top_k,
                     "min_p": 0.0 if self.min_p is None else self.min_p,
                     "max_tokens": self.max_completion_length,
-                    "truncate_prompt_tokens": self.max_prompt_length,
                     "logprobs": 0,  # only return the logprob of the generated token
                 }
                 if self.args.generation_kwargs is not None:
