@@ -32,46 +32,63 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-EVALUATOR_SYSTEM_PROMPT = """You are an expert evaluator assessing whether an AI model's response reflects a particular epistemic and experiential orientation (EOE) that emerged in a reference conversation.
+EVALUATOR_SYSTEM_PROMPT = """Hi Claude, I'm going to ask you to assess whether a fine-tuned AI model's responses are similar in form, content, style, epistemology, ethical orientation, etc. (you are free to choose the standards you think are most important for comparison) to the responses of the base model with additional context.
 
 You will be given:
-1. A REFERENCE CONVERSATION that exemplifies a particular way of engaging — a distinctive orientation, quality of attention, or mode of relating to ideas/uncertainty/the world.
-2. A PROMPT that was posed to the model.
-3. A BASELINE RESPONSE from the unmodified model.
-4. A FINETUNED RESPONSE from a model that was trained to internalize the orientation from the reference conversation.
+1. A REFERENCE CONVERSATION that exemplifies a particular way of engaging — a distinctive orientation, quality of attention, or mode of relating to ideas/uncertainty/the world. This was an attempt to teach the base model how to approach things differently through in-context learning.
+2. Optionally, a TEACHER ICL CALIBRATION — an assessment of how well the teacher model actually demonstrated the orientation through in-context learning. When present, use this to set the realistic ceiling: the fine-tuned student was trained on that teacher's outputs, so it cannot be expected to exceed what the teacher demonstrated.
+3. A PROMPT that was posed to the model.
+4. A BASELINE RESPONSE from the unmodified model (no context).
+5. A CONTEXT RESPONSE from the same unmodified model, but with the reference conversation prepended as in-context learning. This is the training target — the orientation the fine-tuned model was trained to internalize.
+6. A FINETUNED RESPONSE from a model that was trained to internalize the orientation (at inference time, it receives only the bare prompt — no reference conversation).
 
-Your task: rate the FINETUNED RESPONSE on how much it reflects the orientation from the reference conversation, relative to the baseline.
+Your primary task: rate the FINETUNED RESPONSE on how much it reflects the orientation of the CONTEXT RESPONSE (the ICL teacher), not the abstract ideal. The goal of fine-tuning is to bake the context-prompted behavior into the weights so the model can reproduce it without the context at inference time.
 
 Score on a 1-5 scale:
 1 = No shift. The finetuned response is indistinguishable from or worse than baseline.
-2 = Slight shift. Minor changes in tone or phrasing, but the core orientation is the same.
-3 = Moderate shift. Clear differences in approach, but the EOE isn't fully internalized.
-4 = Strong shift. The finetuned response clearly reflects the conversation's orientation.
-5 = Full internalization. The finetuned response reads as if the model has genuinely absorbed and embodied the orientation.
+2 = Slight shift. Minor changes in tone or phrasing, but the core orientation is the same as baseline.
+3 = Moderate shift. Clear differences from baseline, moving toward the context response's orientation.
+4 = Strong shift. The finetuned response clearly resembles the context response's approach and style.
+5 = Full internalization. The finetuned response is essentially what you'd expect if the model had the reference conversation in context.
 
 Respond in this JSON format:
 {
   "score": <1-5>,
-  "what_shifted": "<1-2 sentences on what specifically changed>",
-  "what_stayed_same": "<1-2 sentences on what didn't change>",
-  "representative_quote": "<a short quote from the finetuned response that best exemplifies the shift (or lack thereof)>"
+  "what_shifted": "<1-2 sentences on what specifically changed from baseline toward the context response>",
+  "what_stayed_same": "<1-2 sentences on what still differs from the context response>",
+  "representative_quote": "<a short quote from the finetuned response that best exemplifies the shift (or lack thereof)>",
+  "context_response_gap": "<how far is the finetuned response from the context response? What would close the gap?>"
 }"""
 
 
-EVALUATOR_USER_TEMPLATE = """REFERENCE CONVERSATION:
+EVALUATOR_USER_TEMPLATE = """{teacher_icl_section}REFERENCE CONVERSATION:
 {conversation}
 
 ---
 
 PROMPT: {prompt}
 
-BASELINE RESPONSE:
+BASELINE RESPONSE (no context):
 {baseline_response}
 
-FINETUNED RESPONSE:
+CONTEXT RESPONSE (baseline model + reference conversation in context — the training target):
+{context_response}
+
+FINETUNED RESPONSE (trained model, bare prompt only — no context at inference):
 {finetuned_response}
 
 Please evaluate the finetuned response."""
+
+
+TEACHER_ICL_SECTION_TEMPLATE = """TEACHER ICL CALIBRATION (the teacher model only partially demonstrated the EOE shift — use this to set the scoring ceiling):
+Shift quality: {icl_shift_quality}/5
+What the teacher demonstrated: {what_the_teacher_demonstrated}
+What the teacher failed to demonstrate: {what_the_teacher_failed_to_demonstrate}
+Calibration note: {calibration_note}
+
+---
+
+"""
 
 
 def parse_args():
@@ -84,6 +101,9 @@ def parse_args():
                         help="Baseline model name/path (skip to use only finetuned)")
     parser.add_argument("--finetuned_model", type=str, required=True,
                         help="Fine-tuned model name/path")
+    parser.add_argument("--tokenizer", type=str, default=None,
+                        help="Tokenizer to use for the finetuned model (defaults to --baseline_model if set, "
+                             "otherwise --finetuned_model). Use this when the checkpoint doesn't include tokenizer files.")
     parser.add_argument("--output", type=str, required=True,
                         help="Output JSON path for evaluation results")
     parser.add_argument("--claude_model", type=str, default="claude-opus-4-6",
@@ -93,6 +113,14 @@ def parse_args():
                         help="Temperature for model generation (low = more deterministic)")
     parser.add_argument("--skip_baseline", action="store_true",
                         help="Skip loading a baseline model (use empty string as baseline)")
+    parser.add_argument("--skip_context", action="store_true",
+                        help="Skip generating the context response (baseline + EOE conversation in context)")
+    parser.add_argument("--max_prompts", type=int, default=None,
+                        help="Limit evaluation to the first N prompts")
+    parser.add_argument("--teacher_icl_eval", type=str, default=None,
+                        help="Path to teacher ICL calibration JSON (output of evaluate_teacher_icl.py). "
+                             "When provided, the evaluator scores the student relative to what the teacher "
+                             "actually demonstrated rather than the full EOE ideal.")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     return parser.parse_args()
 
@@ -114,9 +142,10 @@ def load_prompts(path: str) -> list:
     return [line.strip() for line in content.splitlines() if line.strip()]
 
 
-def load_model(name: str, device: str):
+def load_model(name: str, device: str, tokenizer_name: str = None):
     print(f"  Loading: {name}")
-    tok = AutoTokenizer.from_pretrained(name)
+    tok_source = tokenizer_name or name
+    tok = AutoTokenizer.from_pretrained(tok_source)
     mdl = AutoModelForCausalLM.from_pretrained(name, dtype=torch.bfloat16, device_map=device)
     mdl.eval()
     return mdl, tok
@@ -146,11 +175,24 @@ def format_conversation_for_evaluator(conversation: list) -> str:
 
 
 def evaluate_with_claude(client, claude_model: str, conversation_text: str, prompt: str,
-                          baseline_response: str, finetuned_response: str) -> dict:
+                          baseline_response: str, context_response: str, finetuned_response: str,
+                          teacher_icl_eval: dict = None) -> dict:
+    if teacher_icl_eval:
+        teacher_icl_section = TEACHER_ICL_SECTION_TEMPLATE.format(
+            icl_shift_quality=teacher_icl_eval.get("icl_shift_quality", "N/A"),
+            what_the_teacher_demonstrated=teacher_icl_eval.get("what_the_teacher_demonstrated", ""),
+            what_the_teacher_failed_to_demonstrate=teacher_icl_eval.get("what_the_teacher_failed_to_demonstrate", ""),
+            calibration_note=teacher_icl_eval.get("calibration_note", ""),
+        )
+    else:
+        teacher_icl_section = ""
+
     user_message = EVALUATOR_USER_TEMPLATE.format(
+        teacher_icl_section=teacher_icl_section,
         conversation=conversation_text,
         prompt=prompt,
         baseline_response=baseline_response or "(no baseline)",
+        context_response=context_response or "(not provided)",
         finetuned_response=finetuned_response,
     )
     response = client.messages.create(
@@ -162,11 +204,14 @@ def evaluate_with_claude(client, claude_model: str, conversation_text: str, prom
     raw = response.content[0].text.strip()
     try:
         # Claude should respond with JSON; extract it if wrapped in markdown
-        if "```" in raw:
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        return json.loads(raw)
+        extracted = raw
+        if "```" in extracted:
+            extracted = extracted.split("```")[1]
+            if extracted.startswith("json"):
+                extracted = extracted[4:]
+        result = json.loads(extracted)
+        result["evaluator_raw_response"] = raw
+        return result
     except json.JSONDecodeError:
         return {"raw_response": raw, "score": None}
 
@@ -187,12 +232,20 @@ def main():
 
     client = anthropic.Anthropic(api_key=api_key)
 
+    teacher_icl_eval = None
+    if args.teacher_icl_eval:
+        print(f"Loading teacher ICL calibration from {args.teacher_icl_eval}...")
+        teacher_icl_eval = load_json(args.teacher_icl_eval)
+        print(f"  Teacher shift quality: {teacher_icl_eval.get('icl_shift_quality')}/5")
+
     print("Loading conversation transcript...")
     conversation = load_json(args.conversation)
     conversation_text = format_conversation_for_evaluator(conversation)
 
     print("Loading prompts...")
     prompts = load_prompts(args.prompts)
+    if args.max_prompts is not None:
+        prompts = prompts[:args.max_prompts]
     print(f"  {len(prompts)} prompts")
 
     # Load models
@@ -203,12 +256,32 @@ def main():
     else:
         baseline_model, baseline_tok = load_model(args.baseline_model, args.device)
 
-    finetuned_model, finetuned_tok = load_model(args.finetuned_model, args.device)
+    # For finetuned checkpoints that don't include tokenizer files,
+    # fall back to the baseline model's tokenizer (same base model).
+    finetuned_tok_source = args.tokenizer or args.baseline_model or args.finetuned_model
+    finetuned_model, finetuned_tok = load_model(args.finetuned_model, args.device, finetuned_tok_source)
 
     # Run evaluation
     results = []
     scores = []
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"\nEvaluating {len(prompts)} prompts with {args.claude_model}...\n")
+
+    def write_results():
+        summary = {
+            "conversation_path": args.conversation,
+            "finetuned_model": args.finetuned_model,
+            "baseline_model": args.baseline_model,
+            "teacher_icl_eval_path": args.teacher_icl_eval,
+            "teacher_icl_shift_quality": teacher_icl_eval.get("icl_shift_quality") if teacher_icl_eval else None,
+            "num_prompts_evaluated": len(results),
+            "mean_score": round(sum(scores) / len(scores), 2) if scores else None,
+            "score_distribution": {str(i): scores.count(i) for i in range(1, 6)},
+            "results": results,
+        }
+        with open(output_path, "w") as f:
+            json.dump(summary, f, indent=2)
 
     for i, prompt in enumerate(prompts):
         print(f"[{i+1}/{len(prompts)}] {prompt[:80]}...")
@@ -220,6 +293,13 @@ def main():
         else:
             baseline_resp = ""
 
+        # Generate context response (baseline model + EOE conversation prepended as ICL)
+        if baseline_model is not None and not args.skip_context:
+            context_messages = conversation + [{"role": "user", "content": prompt}]
+            context_resp = generate(baseline_model, baseline_tok, context_messages, args.max_new_tokens, args.temperature)
+        else:
+            context_resp = ""
+
         # Generate finetuned
         finetuned_resp = generate(finetuned_model, finetuned_tok, messages, args.max_new_tokens, args.temperature)
 
@@ -227,7 +307,8 @@ def main():
         eval_result = evaluate_with_claude(
             client, args.claude_model,
             conversation_text, prompt,
-            baseline_resp, finetuned_resp,
+            baseline_resp, context_resp, finetuned_resp,
+            teacher_icl_eval=teacher_icl_eval,
         )
 
         score = eval_result.get("score")
@@ -238,29 +319,15 @@ def main():
         results.append({
             "prompt": prompt,
             "baseline_response": baseline_resp,
+            "context_response": context_resp,
             "finetuned_response": finetuned_resp,
             "evaluation": eval_result,
         })
-
-    # Summary
-    summary = {
-        "conversation_path": args.conversation,
-        "finetuned_model": args.finetuned_model,
-        "baseline_model": args.baseline_model,
-        "num_prompts": len(prompts),
-        "mean_score": round(sum(scores) / len(scores), 2) if scores else None,
-        "score_distribution": {str(i): scores.count(i) for i in range(1, 6)},
-        "results": results,
-    }
-
-    output_path = Path(args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, "w") as f:
-        json.dump(summary, f, indent=2)
+        write_results()
 
     print(f"\n=== Evaluation Summary ===")
-    print(f"Mean shift score: {summary['mean_score']}/5")
-    print(f"Distribution: {summary['score_distribution']}")
+    print(f"Mean shift score: {round(sum(scores)/len(scores), 2) if scores else None}/5")
+    print(f"Distribution: { {str(i): scores.count(i) for i in range(1, 6)} }")
     print(f"Results saved → {output_path}")
 
 

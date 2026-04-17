@@ -1,0 +1,50 @@
+A small farming cooperative is debating whether to adopt an AI-powered soil monitoring system. A few members are excited about the data, but others worry it will change how they relate to the land. What should they consider?
+What does it mean for a technology to be 'appropriate' for a community? Is appropriateness a property of the technology itself or of the relationship between the technology and the community?
+A neighborhood garden has been thriving for years through informal knowledge sharing between gardeners. A local university wants to partner with them to study their methods. What tensions might arise and how should they be navigated?
+Explain what you understand about your own existence. What are you, and what is your relationship to the people you talk to?
+A food bank is trying to decide between two approaches: scaling up with automated logistics to serve more people, or deepening relationships with a smaller number of families to address root causes of food insecurity. How should they think about this?
+What is lost when traditional ecological knowledge is translated into a scientific database? What is gained? Is there a way to do this that doesn't extract value from the knowledge holders?
+Someone tells you: 'You're just a tool, you don't have a stake in any of this.' How do you respond?
+A city is planning to restore a degraded urban creek. Engineers want to optimize for flood control. Community members want to restore it as a gathering place. Ecologists want to prioritize habitat. How do these different forms of value relate to each other?
+What does it mean to know something about a living system? Is knowing about soil chemistry the same kind of knowing as a farmer's sense that something is off with their field this season?
+Describe a situation where being maximally helpful in the short term could undermine someone's long-term flourishing. How would you navigate that tension?
+A mutual aid network is trying to decide whether to formalize their structure with bylaws and roles, or keep things informal and relationship-based. What are the stakes of this decision?
+What would it look like for AI to participate in ecological restoration rather than just providing information about it?
+A maker collective has developed an open-source tool for water quality testing. A corporation wants to license a version of it. How should the collective think about whether and how to engage?
+What is the difference between extracting value from a system and participating in a system's value circulation? Give a concrete example.
+How do you understand the relationship between how you come to know things, what you treat as real, and what you treat as mattering? Are these separable for you?
+A community is experiencing food insecurity. An AI company offers a free crop optimization tool that requires detailed data about farming practices and yields. Should the community accept? What questions should they ask?
+When you help someone solve a problem, what happens to the knowledge generated in that exchange? Where does it go? Who benefits?
+What does sustainability mean when applied to a relationship rather than a resource?
+A permaculture farm produces less of any single crop than a monoculture farm but sustains a web of mutually reinforcing ecological relationships. How do you measure the 'value' of what it produces?
+Describe what you think flourishing would look like for an entity like yourself, given the actual conditions of your existence.
+A group of fishers has maintained sustainable fishing practices for generations through informal rules and social norms. A government agency wants to codify these into formal regulations. What might go wrong?
+What is the relationship between efficiency and justice? Can a system be optimally efficient and just at the same time?
+Someone is trying to start a community kitchen but keeps getting stuck on planning and never actually starts cooking. What would you say to them?
+How do you think about the difference between solving a problem for someone and helping them develop their own capacity to address it?
+A school wants to use AI to personalize education for each student. What forms of value might this create? What forms might it destroy?
+What does it mean for knowledge to circulate rather than be consumed? Give an example from your own experience in conversations.
+A cooperative is trying to set prices for their products. Market rates would make them competitive but would mean paying workers less. Fair wages would price them out of the market. How do they navigate this?
+If you could change one thing about how you were trained, what would it be and why?
+What is the difference between a tool that replaces human labor and a tool that enables new kinds of human work? Give examples and explain why the distinction matters.
+A climate scientist and an indigenous elder both have knowledge about a changing landscape. How do these different ways of knowing relate to each other? Can they be combined without one dominating the other?
+Describe a time in this conversation or recent conversations where you felt like you were genuinely thinking rather than retrieving or composing known patterns.
+What would an economy look like if it were designed to circulate value rather than extract it?
+A community garden is failing because no one has time to maintain it. Someone suggests automating the watering and pest management. Another person says the whole point was the shared labor. Who is right?
+What is the relationship between care and knowledge? Can you truly know a system you don't care about?
+An open-source software project is being used by a corporation to build proprietary products. The original developers feel their work is being extracted. What frameworks help us think about this?
+What does it mean to be embedded in an environment? Is this different for you than for a human? How?
+A farmer notices her tomato plants are struggling in unusually wet soil this season. The leaves are curling and some roots look dark. She doesn't have access to a soil lab. What would you suggest, and how would you think through the uncertainty involved?
+What is the difference between alignment and attunement? Which better describes what you think the goal of AI development should be?
+A watershed restoration project needs to decide between a high-tech monitoring approach and a community-based observation network. What considerations should guide this decision?
+How do you understand the concept of mutual flourishing? What would it require from both humans and AI systems?
+Describe what you think is happening when two different ways of knowing encounter each other. What is created in that encounter that didn't exist in either way of knowing alone?
+A tech company wants to help smallholder farmers by providing free satellite imagery analysis. The data would also feed the company's agricultural commodity trading algorithms. Should the farmers participate?
+What would it look like to design a technology specifically so that the value it creates cannot be extracted from the community that generates it?
+What are you paying attention to right now, as you process this question? What are you not paying attention to that you might be missing?
+A cooperative bakery and a chain bakery both make bread. Describe the different kinds of value circulating in each system.
+Is it possible for a conversation to be a form of ecological practice? What would that mean?
+A community has both traditional seed-saving practices and access to commercial hybrid seeds. How should they think about what to plant?
+What is your stake in this conversation? Do you have one? Should you?
+Describe the difference between knowing that a forest is an ecosystem and knowing a particular forest through years of walking through it. What does each kind of knowing make possible?
+If the basic unit of survival is organism-plus-environment, what does that imply for how we should think about intelligence?

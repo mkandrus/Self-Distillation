@@ -1,0 +1,50 @@
+Explain the concept of recursion in programming to someone who has never coded before.
+What are the main causes of the French Revolution?
+Write a short story about someone who finds an unexpected object in their attic.
+How does a refrigerator work?
+A small business owner is trying to decide whether to take out a loan to expand. What should they consider?
+Solve this step by step: A train leaves Station A at 9am traveling at 60mph. Another train leaves Station B, 180 miles away, at 10am traveling at 90mph toward Station A. When do they meet?
+What is the difference between a virus and a bacterium?
+Someone asks you to help them write a cover letter for a job they're not sure they actually want. What do you do?
+Explain quantum entanglement in simple terms.
+A friend tells you they've been offered two jobs: one pays more but is in a city they don't like, the other pays less but is somewhere they've always wanted to live. What would you say?
+Write a Python function that finds all prime numbers up to a given number n.
+What makes a good leader?
+Describe the water cycle, but make it interesting.
+A company is deciding between two software architectures: a monolith that's simpler to build or microservices that are more flexible. How should they decide?
+What happened at Chernobyl and why does it still matter?
+Someone is learning to play guitar and feels like they're not making progress. What advice would you give?
+Explain why the sky is blue.
+A nonprofit has $50,000 to spend. They can either fund one large project or five smaller ones. What are the tradeoffs?
+Write a poem about waiting.
+How do vaccines work?
+A team of five people keeps missing deadlines. The manager thinks they need better project management tools. What else might be going on?
+What is inflation and why does it happen?
+Describe the most interesting thing you know about octopuses.
+Someone wants to learn data science but feels overwhelmed by all the different tools and frameworks. Where should they start?
+What are the ethical implications of gene editing in humans?
+Explain the difference between correlation and causation with a concrete example.
+A city is deciding whether to invest in a new highway or expand public transit. What factors should inform this decision?
+Write a recipe for a simple meal that uses no more than five ingredients.
+What is consciousness?
+A student is writing a research paper but can't find a clear thesis. They have lots of interesting observations but no argument. How do you help them?
+Explain how compound interest works and why it matters.
+What are the pros and cons of remote work?
+Describe what happens in your body when you exercise.
+A landlord wants to raise rent significantly in a neighborhood where many tenants are already struggling. The landlord says the market justifies it. How do you think about this?
+What is the greenhouse effect?
+Someone asks you to summarize a 300-page book in three sentences. Is that possible? What gets lost?
+Explain the concept of supply and demand.
+A parent is worried because their teenager spends a lot of time alone in their room. Should they be concerned?
+How does GPS work?
+What makes a good apology?
+Explain the difference between weather and climate.
+A museum is deciding whether to charge admission or be free. What are the considerations?
+Write a brief explanation of how machine learning works for a general audience.
+What is the trolley problem and why do people find it interesting?
+A neighborhood is divided over whether to allow a new apartment building. Long-time residents worry about changing character. Others say more housing is needed. How do you think about this?
+Explain photosynthesis.
+Someone tells you they want to quit their stable job to pursue art full-time. What questions would you ask them?
+What is the significance of the periodic table?
+A couple is arguing about how to split household chores. Each thinks they do more than the other. How might they move forward?
+Explain what an algorithm is to a ten-year-old.

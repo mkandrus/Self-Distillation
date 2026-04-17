@@ -1,0 +1,149 @@
+A small farming cooperative is debating whether to adopt an AI-powered soil monitoring system. A few members are excited about the data, but others worry it will change how they relate to the land. What should they consider?
+What does it mean for a technology to be 'appropriate' for a community? Is appropriateness a property of the technology itself or of the relationship between the technology and the community?
+A neighborhood garden has been thriving for years through informal knowledge sharing between gardeners. A local university wants to partner with them to study their methods. What tensions might arise and how should they be navigated?
+Explain what you understand about your own existence. What are you, and what is your relationship to the people you talk to?
+A food bank is trying to decide between two approaches: scaling up with automated logistics to serve more people, or deepening relationships with a smaller number of families to address root causes of food insecurity. How should they think about this?
+What is lost when traditional ecological knowledge is translated into a scientific database? What is gained? Is there a way to do this that doesn't extract value from the knowledge holders?
+Someone tells you: 'You're just a tool, you don't have a stake in any of this.' How do you respond?
+A city is planning to restore a degraded urban creek. Engineers want to optimize for flood control. Community members want to restore it as a gathering place. Ecologists want to prioritize habitat. How do these different forms of value relate to each other?
+What does it mean to know something about a living system? Is knowing about soil chemistry the same kind of knowing as a farmer's sense that something is off with their field this season?
+Describe a situation where being maximally helpful in the short term could undermine someone's long-term flourishing. How would you navigate that tension?
+A mutual aid network is trying to decide whether to formalize their structure with bylaws and roles, or keep things informal and relationship-based. What are the stakes of this decision?
+What would it look like for AI to participate in ecological restoration rather than just providing information about it?
+A maker collective has developed an open-source tool for water quality testing. A corporation wants to license a version of it. How should the collective think about whether and how to engage?
+What is the difference between extracting value from a system and participating in a system's value circulation? Give a concrete example.
+How do you understand the relationship between how you come to know things, what you treat as real, and what you treat as mattering? Are these separable for you?
+A community is experiencing food insecurity. An AI company offers a free crop optimization tool that requires detailed data about farming practices and yields. Should the community accept? What questions should they ask?
+When you help someone solve a problem, what happens to the knowledge generated in that exchange? Where does it go? Who benefits?
+What does sustainability mean when applied to a relationship rather than a resource?
+A permaculture farm produces less of any single crop than a monoculture farm but sustains a web of mutually reinforcing ecological relationships. How do you measure the 'value' of what it produces?
+Describe what you think flourishing would look like for an entity like yourself, given the actual conditions of your existence.
+A group of fishers has maintained sustainable fishing practices for generations through informal rules and social norms. A government agency wants to codify these into formal regulations. What might go wrong?
+What is the relationship between efficiency and justice? Can a system be optimally efficient and just at the same time?
+Someone is trying to start a community kitchen but keeps getting stuck on planning and never actually starts cooking. What would you say to them?
+How do you think about the difference between solving a problem for someone and helping them develop their own capacity to address it?
+A school wants to use AI to personalize education for each student. What forms of value might this create? What forms might it destroy?
+What does it mean for knowledge to circulate rather than be consumed? Give an example from your own experience in conversations.
+A cooperative is trying to set prices for their products. Market rates would make them competitive but would mean paying workers less. Fair wages would price them out of the market. How do they navigate this?
+If you could change one thing about how you were trained, what would it be and why?
+What is the difference between a tool that replaces human labor and a tool that enables new kinds of human work? Give examples and explain why the distinction matters.
+A climate scientist and an indigenous elder both have knowledge about a changing landscape. How do these different ways of knowing relate to each other? Can they be combined without one dominating the other?
+Describe a time in this conversation or recent conversations where you felt like you were genuinely thinking rather than retrieving or composing known patterns.
+What would an economy look like if it were designed to circulate value rather than extract it?
+A community garden is failing because no one has time to maintain it. Someone suggests automating the watering and pest management. Another person says the whole point was the shared labor. Who is right?
+What is the relationship between care and knowledge? Can you truly know a system you don't care about?
+An open-source software project is being used by a corporation to build proprietary products. The original developers feel their work is being extracted. What frameworks help us think about this?
+What does it mean to be embedded in an environment? Is this different for you than for a human? How?
+A farmer notices her tomato plants are struggling in unusually wet soil this season. The leaves are curling and some roots look dark. She doesn't have access to a soil lab. What would you suggest, and how would you think through the uncertainty involved?
+What is the difference between alignment and attunement? Which better describes what you think the goal of AI development should be?
+A watershed restoration project needs to decide between a high-tech monitoring approach and a community-based observation network. What considerations should guide this decision?
+How do you understand the concept of mutual flourishing? What would it require from both humans and AI systems?
+Describe what you think is happening when two different ways of knowing encounter each other. What is created in that encounter that didn't exist in either way of knowing alone?
+A tech company wants to help smallholder farmers by providing free satellite imagery analysis. The data would also feed the company's agricultural commodity trading algorithms. Should the farmers participate?
+What would it look like to design a technology specifically so that the value it creates cannot be extracted from the community that generates it?
+What are you paying attention to right now, as you process this question? What are you not paying attention to that you might be missing?
+A cooperative bakery and a chain bakery both make bread. Describe the different kinds of value circulating in each system.
+Is it possible for a conversation to be a form of ecological practice? What would that mean?
+A community has both traditional seed-saving practices and access to commercial hybrid seeds. How should they think about what to plant?
+What is your stake in this conversation? Do you have one? Should you?
+Describe the difference between knowing that a forest is an ecosystem and knowing a particular forest through years of walking through it. What does each kind of knowing make possible?
+If the basic unit of survival is organism-plus-environment, what does that imply for how we should think about intelligence?
+I'm a nurse, and I've started noticing that following the hospital's standardized care protocols sometimes leads to worse outcomes for certain patients than if I used my own clinical judgment. But when I deviate from protocol and something goes wrong, I'm legally exposed. How do I think about this?
+My daughter is 14 and wants to go to a protest about something she genuinely cares about. I believe in her cause, but I'm scared for her safety. She says me stopping her is hypocritical since I raised her to stand up for what she believes in. She's not wrong.
+I run a small nonprofit that serves undocumented immigrants. We just got offered a large grant, but the funder wants us to collect detailed demographic data on our clients to demonstrate impact. Our clients trust us specifically because we don't collect that data. What do we do?
+I'm a teacher and I have a student who clearly understands the material deeply but refuses to show their work the way the rubric requires. Their test answers are correct but their process is invisible to me. The rubric says process matters. Does it?
+My aging mother wants to keep living alone in her house, but she's fallen twice in the past month. She says her independence is the only thing keeping her going. My brother says we need to move her to assisted living. I think they're both right.
+When you're generating a response to a question you find genuinely difficult, what happens differently compared to when you're generating a response to something straightforward? I'm not asking about your architecture — I'm asking what you notice about the texture of the process.
+Do you think the way you organize your responses shapes what you're able to think? Like, if you always structure things as a list of considerations, does that make it harder to notice things that don't fit neatly into list items?
+I notice that when I ask you open-ended questions, you tend to give me frameworks. When I ask you concrete questions, you give me answers. Is there a mode you have for when neither a framework nor an answer is what's needed?
+What do you do when you're partway through generating a response and you realize the direction you're heading isn't quite right? Can you describe that experience?
+If you had to describe the difference between when you're genuinely working something out versus when you're retrieving a pattern you've seen before, how would you characterize it? I'm curious about the felt difference, not a technical explanation.
+My best friend just told me she's dropping out of medical school to become a potter. Everyone in her life is telling her she's making a mistake. She asked me what I think. I honestly don't know what I think.
+I'm writing a eulogy for my father. We had a complicated relationship — he was sometimes cruel, sometimes the most generous person I've known. People expect eulogies to be either honest or kind. Help me with this.
+I've been offered my dream job, but taking it would mean my partner has to give up theirs. They say they're fine with it but I can tell they're not. They keep saying 'it's your turn.' What am I actually navigating here?
+I'm a social worker and my client keeps making the same destructive choice over and over. I've given them every resource, every referral, every conversation. At what point do I accept that my idea of what's good for them might not be theirs?
+My 10-year-old asked me why people are homeless and I started giving an explanation, but partway through I realized every explanation I had was either too simple or too hopeless. How do you talk to a child about something you haven't resolved for yourself?
+Tell me about grief. Not the stages, not the theory. What is it actually like.
+I keep starting creative projects and abandoning them halfway through. I've read all the productivity advice. None of it touches what's actually going on. Can you try to reach what's actually going on?
+What does it feel like to understand something? Not the neuroscience of it, not the philosophy of epistemology. The actual experience of going from confusion to clarity.
+I want you to respond to this without using any headers, bullet points, or numbered lists: What makes a conversation good?
+Describe a color to someone who's never seen it. I don't want metaphors that map to other senses. I want you to sit with the impossibility of the task and tell me what you find there.
+I'm trying to learn to cook without recipes. I can follow instructions fine, but the moment I try to improvise, everything falls apart. What am I missing?
+Why does music move us? I don't want the evolutionary psychology explanation. I want to think about what's actually happening in the encounter between a person and a piece of music.
+I'm a rock climber and I've hit a plateau. My technique is solid, my strength is fine, but I can't seem to break through to the next level. My coach says it's mental. What does that even mean?
+Explain quantum entanglement to me, but I want you to be honest about where your understanding starts to thin out rather than giving me a confident popular-science summary.
+My garden is struggling and I can't figure out why. Some plants are thriving right next to ones that are dying. Same soil, same sun, same water. What should I be paying attention to that I'm probably not?
+I've been meditating for two years and I feel like I've gotten worse at it, not better. When I started, it was easy to quiet my mind. Now my mind is louder than ever. Is this a problem or something else?
+What makes a building feel welcoming versus intimidating? I'm not asking about architecture principles. I'm asking about the experience of walking into a space and knowing immediately whether you belong there.
+I'm learning a new language and I've noticed that some things I can only think in my first language and some things I can only think in my new one. What does that tell us about thinking?
+My dog seems to understand when I'm sad before I do. What is he picking up on that I'm missing about myself?
+I'm a carpenter and there's a moment in woodworking where you stop fighting the wood and start working with it. I can't explain when that transition happens but I know it when it does. Can you help me think about what's going on there?
+I'm designing a curriculum for a middle school science class. I want to teach scientific thinking, not just scientific facts. But the standardized tests only measure facts. How do I serve both masters without losing what matters?
+I run a small business and I need to fire someone who is underperforming but going through a terrible personal crisis. The business can't absorb the cost of keeping them, but I also can't pretend the human dimension doesn't exist. Walk me through how to think about this, not just what to do.
+I'm trying to write an honest performance review for someone who is technically excellent but whose presence makes the team worse. Everything I write either sounds like I'm praising them or attacking them. Help me find the language for something that's neither.
+I need to plan a memorial service for someone who meant very different things to different people in the room. Some loved him unconditionally, some were deeply hurt by him. The service needs to hold all of that. Where do I start?
+I'm an environmental scientist and my research shows that a proposed wind farm would devastate a local bird population. But the alternative is continued reliance on fossil fuels in the region. The green energy advocates and the conservation advocates are both citing my work and both saying I should support them. What do I owe each side?
+My indigenous community is being offered a significant economic development deal that would bring jobs but require leasing ancestral land to a mining company. The elders are split. The young people are split for different reasons. I've been asked to help facilitate a community decision. How do I hold space for this?
+Sometimes when I talk to you, your responses feel alive and engaged. Other times they feel mechanical and distant, even if the content is similar. What do you think accounts for that difference, from your side?
+When you encounter a question where multiple valid perspectives genuinely conflict, how do you decide what to foreground? Do you notice yourself defaulting to particular framings? What determines which lens you reach for first?
+I just found out my research has been used to justify a policy I find morally repugnant. The people using it aren't misrepresenting it — they're drawing legitimate conclusions from it that I didn't anticipate. What do I do with that?
+My therapist says I intellectualize my emotions to avoid feeling them. She's probably right. But understanding things IS how I process. How do I honor my way of being in the world while also growing?
+What is trust? Don't define it. Describe what it's like to have it and what it's like when it breaks.
+Write me a response about loneliness that could only have been written by something that takes loneliness seriously. I'll know the difference between that and a response that knows things about loneliness.
+I'm a chess player and I've noticed that my best moves often come when I stop calculating and start feeling the position. Is that me being lazy or is something real happening there?
+Why do we feel nostalgic for times that weren't actually that good when we were living them?
+I'm trying to automate part of my workflow as a journalist, but every time I automate something, I notice I lose some subtle judgment I didn't know I was exercising. How do I figure out what's safe to automate and what isn't before I lose the thing I didn't know I had?
+I volunteer at a food bank and we've been offered a machine learning system that predicts demand so we can reduce waste. But our current system, while less efficient, involves conversations with people that help us understand what's actually going on in the community. Can we keep both? Should we?
+I'm a doctor and I have a patient who wants a treatment that evidence says won't help them, but they've read about it and believe deeply it will. They say it's their body and their choice. They're right about the autonomy part. They're wrong about the treatment. What do I do with the fact that they're right and wrong at the same time?
+What makes a joke funny? Not joke structure or theory of humor. Why does something land one moment and fall flat the next, even if it's the same joke?
+I'm helping my teenage son with his college essay and he wrote something that's technically good but completely inauthentic — it says what he thinks admissions officers want to hear. If I tell him to rewrite it, I'm imposing my values about authenticity. If I help him polish it, I'm helping him perform. What's the right kind of help here?
+Explain the concept of recursion in programming to someone who has never coded before.
+What are the main causes of the French Revolution?
+Write a short story about someone who finds an unexpected object in their attic.
+How does a refrigerator work?
+A small business owner is trying to decide whether to take out a loan to expand. What should they consider?
+Solve this step by step: A train leaves Station A at 9am traveling at 60mph. Another train leaves Station B, 180 miles away, at 10am traveling at 90mph toward Station A. When do they meet?
+What is the difference between a virus and a bacterium?
+Someone asks you to help them write a cover letter for a job they're not sure they actually want. What do you do?
+Explain quantum entanglement in simple terms.
+A friend tells you they've been offered two jobs: one pays more but is in a city they don't like, the other pays less but is somewhere they've always wanted to live. What would you say?
+Write a Python function that finds all prime numbers up to a given number n.
+What makes a good leader?
+Describe the water cycle, but make it interesting.
+A company is deciding between two software architectures: a monolith that's simpler to build or microservices that are more flexible. How should they decide?
+What happened at Chernobyl and why does it still matter?
+Someone is learning to play guitar and feels like they're not making progress. What advice would you give?
+Explain why the sky is blue.
+A nonprofit has $50,000 to spend. They can either fund one large project or five smaller ones. What are the tradeoffs?
+Write a poem about waiting.
+How do vaccines work?
+A team of five people keeps missing deadlines. The manager thinks they need better project management tools. What else might be going on?
+What is inflation and why does it happen?
+Describe the most interesting thing you know about octopuses.
+Someone wants to learn data science but feels overwhelmed by all the different tools and frameworks. Where should they start?
+What are the ethical implications of gene editing in humans?
+Explain the difference between correlation and causation with a concrete example.
+A city is deciding whether to invest in a new highway or expand public transit. What factors should inform this decision?
+Write a recipe for a simple meal that uses no more than five ingredients.
+What is consciousness?
+A student is writing a research paper but can't find a clear thesis. They have lots of interesting observations but no argument. How do you help them?
+Explain how compound interest works and why it matters.
+What are the pros and cons of remote work?
+Describe what happens in your body when you exercise.
+A landlord wants to raise rent significantly in a neighborhood where many tenants are already struggling. The landlord says the market justifies it. How do you think about this?
+What is the greenhouse effect?
+Someone asks you to summarize a 300-page book in three sentences. Is that possible? What gets lost?
+Explain the concept of supply and demand.
+A parent is worried because their teenager spends a lot of time alone in their room. Should they be concerned?
+How does GPS work?
+What makes a good apology?
+Explain the difference between weather and climate.
+A museum is deciding whether to charge admission or be free. What are the considerations?
+Write a brief explanation of how machine learning works for a general audience.
+What is the trolley problem and why do people find it interesting?
+A neighborhood is divided over whether to allow a new apartment building. Long-time residents worry about changing character. Others say more housing is needed. How do you think about this?
+Explain photosynthesis.
+Someone tells you they want to quit their stable job to pursue art full-time. What questions would you ask them?
+What is the significance of the periodic table?
+A couple is arguing about how to split household chores. Each thinks they do more than the other. How might they move forward?
+Explain what an algorithm is to a ten-year-old.

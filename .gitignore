@@ -9,7 +9,17 @@ bsub_outputs/
 
 # Model checkpoints and training outputs
 test_experiment*/
+eoe_*/
 *.arrow
+
+# Generated datasets (large, regeneratable via create_eoe_dataset.py)
+data/
+
+# Claude Code internal files
+.claude/
+
+# Crash artifacts
+crashed_claude_qwen_chat.txt
 
 # PDF source files (transcripts committed as JSON instead)
 *.pdf

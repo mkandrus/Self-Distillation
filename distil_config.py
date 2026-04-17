@@ -621,6 +621,15 @@ class DistilConfig(TrainingArguments):
             "less predictable. A value of `0` (default) means all completion tokens are included in the loss."
         },
     )
+    token_kl_clip: float = field(
+        default=0.0,
+        metadata={
+            "help": "Per-token KL clipping threshold. When > 0, clamps the per-token distillation loss to this "
+            "value before reduction, preventing high-divergence tokens (style tokens, domain-shift tokens) from "
+            "dominating the gradient. Inspired by OPSD (Zhao et al.), which found style tokens can have 6-15× "
+            "higher KL than content tokens. Recommended value: 0.05. Default 0.0 (disabled)."
+        },
+    )
     vllm_importance_sampling_correction: bool = field(
         default=True,
         metadata={

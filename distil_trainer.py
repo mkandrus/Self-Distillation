@@ -420,6 +420,7 @@ class DistilTrainer(BaseTrainer):
         self.mask_truncated_completions = args.mask_truncated_completions
         self.top_entropy_quantile = args.top_entropy_quantile
         self.num_loss_tokens_to_skip = args.num_loss_tokens_to_skip
+        self.token_kl_clip = args.token_kl_clip
 
         # Datasets
         self.shuffle_dataset = args.shuffle_dataset
@@ -985,16 +986,35 @@ class DistilTrainer(BaseTrainer):
                         name = name.removeprefix("base_model.model.").replace(".base_layer", "")
                         if self.model.prefix in name:
                             continue
+                        # Skip LoRA adapter tensors (lora_A, lora_B, etc.) — after the prefix strip
+                        # above, these no longer contain self.model.prefix so the check above misses
+                        # them. The merged base weights are what vLLM needs; adapter tensors have
+                        # wrong shapes for vLLM's fused QKV parameters.
+                        if "lora_" in name:
+                            continue
                         # When module to save, remove its prefix and discard the original module
                         if "original_module" in name:
                             continue
                         name = self._fix_param_name_to_vllm(name, extra_prefixes=["modules_to_save.default."])
 
+                        # For bitsandbytes 4-bit weights, param.data is packed storage (half-sized).
+                        # Dequantize to bfloat16 before passing to vLLM which expects full-precision.
+                        try:
+                            import bitsandbytes as bnb
+                            if isinstance(param, bnb.nn.Params4bit) and param.quant_state is not None:
+                                weight_data = bnb.functional.dequantize_4bit(
+                                    param.data, param.quant_state
+                                ).to(torch.bfloat16)
+                            else:
+                                weight_data = param.data
+                        except (ImportError, Exception):
+                            weight_data = param.data
+
                         if self.vllm_mode == "server" and self.accelerator.is_main_process:
-                            self.vllm_client.update_named_param(name, param.data)
+                            self.vllm_client.update_named_param(name, weight_data)
                         elif self.vllm_mode == "colocate":
                             llm_model = self.llm.llm_engine.model_executor.driver_worker.model_runner.model
-                            llm_model.load_weights([(name, param.data)])
+                            llm_model.load_weights([(name, weight_data)])
                 # Unmerge adapters while parameters are still gathered
                 self.model.unmerge_adapter()
                 # Parameters will automatically be repartitioned when exiting the context
@@ -1761,6 +1781,11 @@ class DistilTrainer(BaseTrainer):
             # Compute the Generalized Jensen-Shannon Divergence
             kl_loss = alpha * kl_teacher + (1 - alpha) * kl_student
         per_token_loss = kl_loss.sum(-1)
+
+        # Per-token KL clipping: cap outlier tokens (style/domain-shift tokens can have
+        # 6-15× higher KL than content tokens and dominate the gradient). Inspired by OPSD.
+        if self.token_kl_clip > 0:
+            per_token_loss = per_token_loss.clamp(max=self.token_kl_clip)
 
         if self.use_vllm and self.vllm_importance_sampling_correction and not self.generate_from_teacher:
             ratio = inputs["importance_sampling_ratio"]
